@@ -1,0 +1,59 @@
+- hosts: all
+  become: yes
+
+  vars_files:
+    - group_vars/webservers/vars.yml
+
+  roles:
+    - geerlingguy.pip
+
+  collections:
+    - community.docker
+
+  tasks:
+    - name: install docker
+      tags: prepare
+      become: yes
+      pip:
+        name: docker
+        state: present
+
+    - name: create .env from template
+      tags: prepare
+      ansible.builtin.template:
+        src: templates/env.j2
+        dest: "{{ env_path }}"
+        mode: "666"
+
+    - name: create redmine container
+      tags: deploy
+      become: yes
+      community.docker.docker_container:
+        name: redmine
+        image: redmine:latest
+        env_file: "{{ env_path }}"
+        ports:
+          - "80:3000"
+        restart_policy: always
+
+- hosts: webservers
+  become: yes
+  tags: datadog
+  vars_files:
+    - group_vars/webservers/vars.yml
+
+  roles:
+    - datadog.datadog
+
+  vars:
+    datadog_site: "{{ datadog_site }}"
+    datadog_api_key: "{{ datadog_api_key }}"
+    datadog_agent_flavor: "{{ datadog_agent_flavor }}"
+    datadog_checks: "{{ datadog_checks }}"
+
+  tasks:
+    - name: start datadog agent
+      service:
+        name: datadog-agent
+        state: restarted
+        enabled: yes
