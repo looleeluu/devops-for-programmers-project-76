@@ -14,6 +14,6 @@ https://devops-project.ru
 
 # Contains next commands:
 
-`make prepare` -- setup environment on servers
-`make deploy` -- install only redmine image
-`make datadog` -- install datadog
+`make prepare` - setup environment on servers  
+`make deploy` - install only redmine image  
+`make datadog` - install datadog
