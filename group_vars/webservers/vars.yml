@@ -1,13 +1,6 @@
-env_path: "~/.env"
-
-db_host: "rc1d-fl5r68kld42jbrv4.mdb.yandexcloud.net"
-db_port: "6432"
-db_name: "redmine"
-db_user: "ilya"
-
 # datadog
 datadog_agent_flavor: "datadog-agent"
-datadog_api_key: "{{ dd_api_key}}"
+datadog_api_key: "{{ vault_dd_api_key}}"
 datadog_site: "datadoghq.eu"
 datadog_checks:
   http_check:

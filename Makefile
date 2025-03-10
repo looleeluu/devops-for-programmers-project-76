@@ -19,5 +19,8 @@ datadog:
 start:
 	ansible-playbook -i inventory.ini playbook.yml --vault-password-file .password
 
-edit-vault:
+edit-all-vault:
+	ansible-vault edit group_vars/all/vault.yml --vault-password-file .password
+
+edit-webservers-vault:
 	ansible-vault edit group_vars/webservers/vault.yml --vault-password-file .password
